@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/sidekiq/ecs/scaler/version"
+require_relative "lib/sidekiq-ecs-scaler/version"
 
 Gem::Specification.new do |spec|
   spec.name = "sidekiq-ecs-scaler"
-  spec.version = Sidekiq::Ecs::Scaler::VERSION
+  spec.version = SidekiqEcsScaler::VERSION
   spec.authors = ["shoma07"]
   spec.email = ["23730734+shoma07@users.noreply.github.com"]
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sidekiq/ecs/scaler"
+require "sidekiq-ecs-scaler"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
