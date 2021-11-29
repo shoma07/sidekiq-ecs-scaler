@@ -2,3 +2,5 @@
 # frozen_string_literal: true
 
 require "sidekiq-ecs-scaler"
+
+raise "`sidekiq-ecs-scaler` command is not yet supported!"
