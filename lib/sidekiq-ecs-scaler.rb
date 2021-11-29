@@ -23,7 +23,7 @@ module SidekiqEcsScaler
       @config ||= Configuration.new
     end
 
-    # @yieldparam [SidekiqEcsScaler::Configuration]
+    # @yieldparam config [SidekiqEcsScaler::Configuration]
     # @yieldreturn [void]
     # @return [void]
     def configure
