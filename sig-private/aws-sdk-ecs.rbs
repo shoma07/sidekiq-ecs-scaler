@@ -1,0 +1,36 @@
+module Aws
+  module ECS
+    class Client
+      def describe_tasks: ({ cluster: ::String, tasks: ::Array[::String] }) -> ::Aws::ECS::Types::DescribeTasksResponse
+
+      def describe_services: ({ cluster: ::String, services: ::Array[::String] }) -> ::Aws::ECS::Types::DescribeServicesResponse
+
+      def update_service: ({ cluster: ::String, service: ::String, desired_count: ::Integer }) -> ::Aws::ECS::Types::UpdateServiceResponse
+    end
+
+    module Types
+      class DescribeServicesResponse
+        def services: () -> ::Array[::Aws::ECS::Types::Service]
+      end
+
+      class DescribeTasksResponse
+        def tasks: () -> ::Array[::Aws::ECS::Types::Task]
+      end
+
+      class Service
+        def cluster_arn: () -> ::String
+
+        def service_name: () -> ::String
+
+        def desired_count: () -> ::Integer
+      end
+
+      class Task
+        def group: () -> ::String
+      end
+
+      class UpdateServiceResponse
+      end
+    end
+  end
+end

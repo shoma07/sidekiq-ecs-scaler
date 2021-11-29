@@ -1,0 +1,11 @@
+module Sidekiq
+  module Worker
+    def self.sidekiq_options: (::Hash[untyped, untyped]) -> ::Hash[untyped, untyped]
+  end
+
+  class Queue
+    def initialize: (::String) -> void
+
+    def latency: () -> ::Float
+  end
+end

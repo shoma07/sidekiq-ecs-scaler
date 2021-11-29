@@ -1,0 +1,75 @@
+module SidekiqEcsScaler
+  VERSION: ::String
+
+  class Error < StandardError
+  end
+
+  def self.config: () -> ::SidekiqEcsScaler::Configuration
+def self.configure: () { (::SidekiqEcsScaler::Configuration) -> void } -> void
+
+  def self.client: () -> ::SidekiqEcsScaler::Client
+
+  class Client
+    def initialize: (::SidekiqEcsScaler::Configuration) -> void
+
+    def update_desired_count: () -> ::Integer?
+
+    private
+
+    attr_reader config: ::SidekiqEcsScaler::Configuration
+
+    def queue_latency: () -> ::Float
+
+    def desired_count_by_latency: () -> ::Integer
+
+    def service_name: () -> ::String
+
+    def describe_service: () -> ::Aws::ECS::Types::Service
+
+    def update_service: (service: ::Aws::ECS::Types::Service, desired_count: ::Integer) -> ::Aws::ECS::Types::UpdateServiceResponse
+  end
+
+  class Configuration
+    attr_accessor queue_name: ::String
+
+    attr_reader min_count: ::Integer
+
+    attr_reader max_count: ::Integer
+
+    attr_reader max_latency: ::Integer
+
+    attr_reader task_meta: ::SidekiqEcsScaler::TaskMetaV4?
+
+    attr_reader ecs_client: ::Aws::ECS::Client
+
+    def initialize: () -> void
+
+    def min_count=: (::Integer) -> void
+
+    def max_count=: (::Integer) -> void
+
+    def max_latency=: (::Integer) -> void
+
+    def ecs_client=: (::Aws::ECS::Client) -> void
+
+    def latency_per_count: () -> ::Integer
+
+    def task_meta!: () -> ::SidekiqEcsScaler::TaskMetaV4
+  end
+
+  class TaskMetaV4
+    def self.build_or_null: () -> ::SidekiqEcsScaler::TaskMetaV4?
+
+    attr_reader cluster: ::String
+
+    attr_reader task_arn: ::String
+
+    def initialize: (::Hash[untyped, untyped]) -> void
+  end
+
+  class Worker
+    include ::Sidekiq::Worker
+
+    def perform: () -> ::Integer?
+  end
+end

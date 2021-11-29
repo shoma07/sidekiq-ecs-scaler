@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require "simplecov"
+SimpleCov.start do
+  enable_coverage :branch
+  add_filter "/spec/"
+end
+SimpleCov.minimum_coverage 100
+
 require "sidekiq-ecs-scaler"
 
 RSpec.configure do |config|
@@ -11,5 +18,9 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before(:each) do
+    allow(Aws::ECS::Client).to receive(:new).and_return(Aws::ECS::Client.new(stub_responses: true))
   end
 end

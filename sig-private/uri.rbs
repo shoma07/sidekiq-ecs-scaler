@@ -1,0 +1,6 @@
+module ::URI
+  def self.parse: (String) -> ::URI::HTTP
+
+  class ::URI::HTTP
+  end
+end
