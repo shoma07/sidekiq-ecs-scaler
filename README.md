@@ -1,6 +1,6 @@
 # SidekiqEcsScaler
 
-Auto scaler of sidekiq worker deploymented to AWS ECS.
+Auto scaler of [Sidekiq](https://github.com/mperham/sidekiq) worker deploymented to AWS ECS.
 
 Only supported when deploying Sidekiq workers to AWS ECS Fargate (1.14.0+)
 
@@ -48,6 +48,7 @@ When using [sidekiq-scheduler](https://github.com/moove-it/sidekiq-scheduler), s
 
 ```yml
 # sidekiq.yml
+# example
 
 :schedule:
   SidekiqEcsScaler::Worker:
