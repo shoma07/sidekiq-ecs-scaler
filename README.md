@@ -2,6 +2,8 @@
 
 Auto scaler of sidekiq worker deploymented to AWS ECS.
 
+Only supported when deploying sidekiq workers to AWS ECS Fargate (1.14.0 and above)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -20,7 +22,43 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration
+
+```ruby
+SidekiqEcsScaler.configure do |config|
+  # queue to monitor latency, default is "default"
+  config.queue_name = "default"
+
+  # minimum number of tasks, default is 1
+  config.min_count = 1
+
+  # maximum number of tasks, default is 1
+  config.max_count = 3
+
+  # maximum latency(seconds), default is 3600
+  config.max_latency = 3600
+
+  # custom ECS Client
+  config.ecs_client = Aws::ECS::Client.new
+
+  # Set worker options for scaling
+  config.sidekiq_options = { "retry" => true, "queue" => "scheduler" }
+end
+```
+
+### With Sidekiq Scheduler
+
+When using [sidekiq-scheduler](https://github.com/moove-it/sidekiq-scheduler), schedule the scale by setting as follows.
+
+```yml
+# sidekiq.yml
+
+:schedule:
+  SidekiqEcsScaler::Worker:
+    cron: "0 */15 * * * *"
+    # It is safe to set this queue to have a higher priority than the monitored queue.
+    queue: scheduler
+```
 
 ## Development
 
