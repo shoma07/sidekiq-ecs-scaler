@@ -1,6 +1,6 @@
 module Sidekiq
   module Worker
-    def self.sidekiq_options: (::Hash[untyped, untyped]) -> ::Hash[untyped, untyped]
+    def self.sidekiq_options: (?::Hash[untyped, untyped]) -> ::Hash[untyped, untyped]
   end
 
   class Queue

@@ -89,5 +89,18 @@ module SidekiqEcsScaler
     def task_meta!
       task_meta || (raise Error, "task metadata is null!")
     end
+
+    # @return [Hash]
+    def sidekiq_options
+      ::SidekiqEcsScaler::Worker.sidekiq_options
+    end
+
+    # @param sidekiq_options [Hash]
+    # @return [void]
+    def sidekiq_options=(sidekiq_options)
+      raise ArgumentError unless sidekiq_options.is_a?(Hash)
+
+      ::SidekiqEcsScaler::Worker.sidekiq_options(sidekiq_options)
+    end
   end
 end

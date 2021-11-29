@@ -235,4 +235,42 @@ RSpec.describe SidekiqEcsScaler::Configuration do
       end
     end
   end
+
+  describe "#sidekiq_options" do
+    subject { configuration.sidekiq_options }
+
+    context "when default" do
+      it { is_expected.to eq({ "retry" => true, "queue" => "default" }) }
+    end
+  end
+
+  describe "#sidekiq_options=" do
+    subject(:write) { configuration.sidekiq_options = sidekiq_options }
+
+    context "when argument is invalid" do
+      let(:sidekiq_options) { nil }
+
+      it do
+        expect { write }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "when argument is valid" do
+      let(:sidekiq_options) { { "queue" => "scheduler" } }
+
+      around do |example|
+        original_options = SidekiqEcsScaler::Worker.sidekiq_options
+
+        example.run
+
+        SidekiqEcsScaler::Worker.sidekiq_options(original_options)
+      end
+
+      it do
+        expect { write }.to(
+          change(SidekiqEcsScaler::Worker, :sidekiq_options).to({ "retry" => true, "queue" => "scheduler" })
+        )
+      end
+    end
+  end
 end

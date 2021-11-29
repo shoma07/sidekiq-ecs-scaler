@@ -5,7 +5,8 @@ module SidekiqEcsScaler
   end
 
   def self.config: () -> ::SidekiqEcsScaler::Configuration
-def self.configure: () { (::SidekiqEcsScaler::Configuration) -> void } -> void
+
+  def self.configure: () { (::SidekiqEcsScaler::Configuration) -> void } -> void
 
   def self.client: () -> ::SidekiqEcsScaler::Client
 
@@ -55,6 +56,10 @@ def self.configure: () { (::SidekiqEcsScaler::Configuration) -> void } -> void
     def latency_per_count: () -> ::Integer
 
     def task_meta!: () -> ::SidekiqEcsScaler::TaskMetaV4
+
+    def sidekiq_options: () -> ::Hash[untyped, untyped]
+
+    def sidekiq_options=: (::Hash[untyped, untyped]) -> void
   end
 
   class TaskMetaV4
@@ -69,6 +74,8 @@ def self.configure: () { (::SidekiqEcsScaler::Configuration) -> void } -> void
 
   class Worker
     include ::Sidekiq::Worker
+
+    def self.sidekiq_options: (?::Hash[untyped, untyped]) -> ::Hash[untyped, untyped]
 
     def perform: () -> ::Integer?
   end
