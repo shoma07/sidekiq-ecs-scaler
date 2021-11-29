@@ -2,7 +2,7 @@
 
 Auto scaler of sidekiq worker deploymented to AWS ECS.
 
-Only supported when deploying sidekiq workers to AWS ECS Fargate (1.14.0 and above)
+Only supported when deploying Sidekiq workers to AWS ECS Fargate (1.14.0+)
 
 ## Installation
 
@@ -15,10 +15,6 @@ gem 'sidekiq-ecs-scaler'
 And then execute:
 
     $ bundle install
-
-Or install it yourself as:
-
-    $ gem install sidekiq-ecs-scaler
 
 ## Usage
 
