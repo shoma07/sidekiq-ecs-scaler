@@ -11,7 +11,7 @@ module SidekiqEcsScaler
 
     # @return [Integer, nil]
     def update_desired_count
-      return unless config.task_meta
+      return if !config.enabled || config.task_meta.nil?
 
       desired_count_by_latency.then do |desired_count|
         describe_service.then do |service|

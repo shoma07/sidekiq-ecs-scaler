@@ -31,6 +31,8 @@ module SidekiqEcsScaler
   end
 
   class Configuration
+    attr_reader enabled: bool
+
     attr_accessor queue_name: ::String
 
     attr_reader min_count: ::Integer
@@ -41,15 +43,17 @@ module SidekiqEcsScaler
 
     attr_reader task_meta: ::SidekiqEcsScaler::TaskMetaV4?
 
-    attr_reader ecs_client: ::Aws::ECS::Client
-
     def initialize: () -> void
+
+    def enabled=: (bool) -> void
 
     def min_count=: (::Integer) -> void
 
     def max_count=: (::Integer) -> void
 
     def max_latency=: (::Integer) -> void
+
+    def ecs_client: () -> ::Aws::ECS::Client
 
     def ecs_client=: (::Aws::ECS::Client) -> void
 
