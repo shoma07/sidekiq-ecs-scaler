@@ -22,6 +22,9 @@ And then execute:
 
 ```ruby
 SidekiqEcsScaler.configure do |config|
+  # enable / disable of scaler, default is true
+  config.enabled = true
+
   # queue to monitor latency, default is "default"
   config.queue_name = "default"
 

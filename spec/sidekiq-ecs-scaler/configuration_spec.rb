@@ -3,6 +3,42 @@
 RSpec.describe SidekiqEcsScaler::Configuration do
   let(:configuration) { described_class.new }
 
+  describe "#enabled" do
+    subject { configuration.enabled }
+
+    context "when default" do
+      it { is_expected.to eq true }
+    end
+  end
+
+  describe "#enabled=" do
+    subject(:write) { configuration.enabled = enabled }
+
+    context "when enabled is true" do
+      let(:enabled) { true }
+
+      it do
+        expect { write }.not_to change(configuration, :enabled).from(true)
+      end
+    end
+
+    context "when enabled is false" do
+      let(:enabled) { false }
+
+      it do
+        expect { write }.to change(configuration, :enabled).to(false)
+      end
+    end
+
+    context "when enabled is invalid" do
+      let(:enabled) { "true" }
+
+      it do
+        expect { write }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
   describe "#queue_name" do
     subject { configuration.queue_name }
 
@@ -12,7 +48,7 @@ RSpec.describe SidekiqEcsScaler::Configuration do
   end
 
   describe "#queue_name=" do
-    subject(:write) { configuration.queue_name = (queue_name) }
+    subject(:write) { configuration.queue_name = queue_name }
 
     context "when argument is valid" do
       let(:queue_name) { "highest" }

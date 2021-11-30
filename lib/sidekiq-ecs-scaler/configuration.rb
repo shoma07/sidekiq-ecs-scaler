@@ -3,6 +3,9 @@
 module SidekiqEcsScaler
   # SidekiqEcsScaler::Configuration
   class Configuration
+    # @!attribute [r] enabled
+    # @return [Boolean]
+    attr_reader :enabled
     # @!attribute [r] queue_name
     # @return [String]
     attr_reader :queue_name
@@ -18,9 +21,6 @@ module SidekiqEcsScaler
     # @!attribute [r] task_meta
     # @return [SidekiqEcsScaler::TaskMetaV4, nil]
     attr_reader :task_meta
-    # @!attribute [r] ecs_client
-    # @return [Aws::ECS::Client]
-    attr_reader :ecs_client
 
     # @return [void]
     def initialize
@@ -28,8 +28,17 @@ module SidekiqEcsScaler
       @min_count = 1
       @max_count = 1
       @max_latency = 3600
-      @ecs_client = Aws::ECS::Client.new
       @task_meta = TaskMetaV4.build_or_null
+      @enabled = true
+    end
+
+    # @param enabled [Boolean]
+    # @return [void]
+    # @raise [ArgumentError]
+    def enabled=(enabled)
+      raise ArgumentError if !enabled.is_a?(TrueClass) && !enabled.is_a?(FalseClass)
+
+      @enabled = enabled
     end
 
     # @param queue_name [String]
@@ -67,6 +76,11 @@ module SidekiqEcsScaler
       raise ArgumentError if max_count > max_latency
 
       @max_latency = max_latency
+    end
+
+    # @return [Aws::ECS::Client]
+    def ecs_client
+      @ecs_client ||= Aws::ECS::Client.new
     end
 
     # @param ecs_client [Aws::ECS::Client]
