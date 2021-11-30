@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "logger"
 require "uri"
 require "net/http"
 require "json"

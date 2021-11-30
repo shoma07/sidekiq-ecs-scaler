@@ -6,6 +6,7 @@ RSpec.describe SidekiqEcsScaler::Client do
   let(:config) do
     SidekiqEcsScaler::Configuration.new.tap do |c|
       c.queue_name = "highest"
+      c.logger = Logger.new(io).tap { |logger| logger.formatter = Sidekiq::Logger::Formatters::JSON.new }
       c.min_count = 1
       c.max_count = 10
       c.max_latency = 3600
@@ -15,6 +16,8 @@ RSpec.describe SidekiqEcsScaler::Client do
   end
 
   let(:enabled) { true }
+
+  let(:io) { StringIO.new }
 
   let(:ecs_client) { Aws::ECS::Client.new(stub_responses: true) }
 
@@ -58,6 +61,13 @@ RSpec.describe SidekiqEcsScaler::Client do
 
     context "when queue latency is less than max latency" do
       it { is_expected.to eq 6 }
+
+      it do
+        update
+        expect(JSON.parse(io.tap(&:rewind).read).fetch("msg")).to(
+          eq("SidekiqEcsScaler has updated the desired count of tasks from 1 to 6.")
+        )
+      end
     end
 
     context "when queue latency is grater than max_latency" do
@@ -70,12 +80,24 @@ RSpec.describe SidekiqEcsScaler::Client do
       end
 
       it { is_expected.to eq 10 }
+      it do
+        update
+        expect(JSON.parse(io.tap(&:rewind).read).fetch("msg")).to(
+          eq("SidekiqEcsScaler has updated the desired count of tasks from 1 to 10.")
+        )
+      end
     end
 
     context "when desired_count is not changed" do
       let(:stub_services) { [{ cluster_arn: "cluster", service_name: "service", desired_count: 6 }] }
 
       it { is_expected.to eq 6 }
+      it do
+        update
+        expect(JSON.parse(io.tap(&:rewind).read).fetch("msg")).to(
+          eq("SidekiqEcsScaler doesn't have updated the desired count of tasks from 6.")
+        )
+      end
     end
 
     context "when task is not found" do

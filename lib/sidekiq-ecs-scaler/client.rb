@@ -13,13 +13,17 @@ module SidekiqEcsScaler
     def update_desired_count
       return if !config.enabled || config.task_meta.nil?
 
-      desired_count_by_latency.then do |desired_count|
-        describe_service.then do |service|
-          update_service(service: service, desired_count: desired_count) if service.desired_count != desired_count
+      desired_count = desired_count_by_latency
+      service = describe_service
 
-          desired_count
-        end
+      if service.desired_count == desired_count
+        not_change_log(desired_count)
+      else
+        update_service(service: service, desired_count: desired_count)
+        change_log(service.desired_count, desired_count)
       end
+
+      desired_count
     end
 
     private
@@ -68,6 +72,21 @@ module SidekiqEcsScaler
           service: service.service_name,
           desired_count: desired_count
         }
+      )
+    end
+
+    # @param count [Integer]
+    # @return [void]
+    def not_change_log(count)
+      config.logger.info("SidekiqEcsScaler doesn't have updated the desired count of tasks from #{count}.")
+    end
+
+    # @param before_count [Integer]
+    # @param after_count [Integer]
+    # @return [void]
+    def change_log(before_count, after_count)
+      config.logger.info(
+        "SidekiqEcsScaler has updated the desired count of tasks from #{before_count} to #{after_count}."
       )
     end
   end

@@ -39,6 +39,34 @@ RSpec.describe SidekiqEcsScaler::Configuration do
     end
   end
 
+  describe "#logger" do
+    subject { configuration.logger }
+
+    context "when default" do
+      it { is_expected.to eq Sidekiq.logger }
+    end
+  end
+
+  describe "#logger=" do
+    subject(:write) { configuration.logger = logger }
+
+    context "when logger is valid" do
+      let(:logger) { Logger.new(StringIO.new) }
+
+      it do
+        expect { write }.to change(configuration, :logger).to(logger)
+      end
+    end
+
+    context "when logger is invalid" do
+      let(:logger) { StringIO.new }
+
+      it do
+        expect { write }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
   describe "#queue_name" do
     subject { configuration.queue_name }
 

@@ -25,6 +25,9 @@ SidekiqEcsScaler.configure do |config|
   # enable / disable of scaler, default is true
   config.enabled = true
 
+  # logger, default is Sidekiq.logger
+  config.logger = Sidekiq.logger
+
   # queue to monitor latency, default is "default"
   config.queue_name = "default"
 
@@ -37,7 +40,7 @@ SidekiqEcsScaler.configure do |config|
   # maximum latency(seconds), default is 3600
   config.max_latency = 3600
 
-  # custom ECS Client
+  # custom ECS Client, default is Aws::ECS::Client.new
   config.ecs_client = Aws::ECS::Client.new
 
   # Set worker options for scaling
