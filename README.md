@@ -60,6 +60,14 @@ When using [sidekiq-scheduler](https://github.com/moove-it/sidekiq-scheduler), s
     queue: scheduler
 ```
 
+### About AWS IAM Policy
+
+The task role of ECS task that runs Sidekiq workers requires the following permissions:
+
+- `ecs:DescribeTasks`
+- `ecs:DescribeServices`
+- `ecs:UpdateService`
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
