@@ -6,4 +6,6 @@ target :lib do
   check "lib"
 
   library "json"
+  library "logger"
+  library "monitor"
 end

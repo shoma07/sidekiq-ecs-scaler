@@ -1,4 +1,6 @@
 module Sidekiq
+  def self.logger: () -> ::Logger
+
   module Worker
     def self.sidekiq_options: (?::Hash[untyped, untyped]) -> ::Hash[untyped, untyped]
   end

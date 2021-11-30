@@ -41,6 +41,19 @@ module SidekiqEcsScaler
       @enabled = enabled
     end
 
+    # @return [Logger]
+    def logger
+      @logger ||= Sidekiq.logger
+    end
+
+    # @param logger [Logger]
+    # @return [void]
+    def logger=(logger)
+      raise ArgumentError unless logger.is_a?(Logger)
+
+      @logger = logger
+    end
+
     # @param queue_name [String]
     # @return [void]
     def queue_name=(queue_name)

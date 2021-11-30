@@ -28,6 +28,10 @@ module SidekiqEcsScaler
     def describe_service: () -> ::Aws::ECS::Types::Service
 
     def update_service: (service: ::Aws::ECS::Types::Service, desired_count: ::Integer) -> ::Aws::ECS::Types::UpdateServiceResponse
+
+    def not_change_log: (::Integer) -> void
+
+    def change_log: (::Integer, ::Integer) -> void
   end
 
   class Configuration
@@ -46,6 +50,10 @@ module SidekiqEcsScaler
     def initialize: () -> void
 
     def enabled=: (bool) -> void
+
+    def logger: () -> ::Logger
+
+    def logger=: (::Logger) -> void
 
     def min_count=: (::Integer) -> void
 
