@@ -37,7 +37,7 @@ SidekiqEcsScaler.configure do |config|
   # maximum number of tasks, default is 1
   config.max_count = 3
 
-  # steps number in the desired count range
+  # steps number in the desired count range, default is 1
   config.step_count = 1
 
   # maximum latency(seconds), default is 3600
