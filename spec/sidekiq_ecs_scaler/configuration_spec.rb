@@ -199,6 +199,34 @@ RSpec.describe SidekiqEcsScaler::Configuration do
     end
   end
 
+  describe "#step_count" do
+    subject { configuration.step_count }
+
+    context "when default" do
+      it { is_expected.to eq 1 }
+    end
+  end
+
+  describe "#step_count=" do
+    subject(:write) { configuration.step_count = step_count }
+
+    context "when argument is valid" do
+      let(:step_count) { 2 }
+
+      it do
+        expect { write }.to change(configuration, :step_count).to(2)
+      end
+    end
+
+    context "when argument is invalid" do
+      let(:step_count) { 0 }
+
+      it do
+        expect { write }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
   describe "#max_latency" do
     subject { configuration.max_latency }
 
@@ -268,16 +296,29 @@ RSpec.describe SidekiqEcsScaler::Configuration do
     end
   end
 
-  describe "#latency_per_count" do
-    subject { configuration.latency_per_count }
+  describe "#latency_per_step_count" do
+    subject { configuration.latency_per_step_count }
 
-    before do
-      configuration.min_count = 2
-      configuration.max_count = 20
-      configuration.max_latency = 3600
+    context "when step_count is 1" do
+      before do
+        configuration.min_count = 2
+        configuration.max_count = 20
+        configuration.max_latency = 3600
+      end
+
+      it { is_expected.to eq 189 }
     end
 
-    it { is_expected.to eq 189 }
+    context "when step_count is 2" do
+      before do
+        configuration.min_count = 2
+        configuration.max_count = 20
+        configuration.step_count = 2
+        configuration.max_latency = 3600
+      end
+
+      it { is_expected.to eq 360 }
+    end
   end
 
   describe "#task_meta!" do

@@ -39,9 +39,14 @@ module SidekiqEcsScaler
 
     # @return [Integer]
     def desired_count_by_latency
-      (config.min_count..config.max_count).to_a.at(
-        (queue_latency.to_f / config.latency_per_count).floor.to_i
+      desired_count_list.at(
+        (queue_latency.to_f / config.latency_per_step_count).floor.to_i
       ) || config.max_count
+    end
+
+    # @return [Array<Integer>]
+    def desired_count_list
+      config.min_count.step(config.max_count, config.step_count).to_a
     end
 
     # @return [String]

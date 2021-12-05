@@ -15,6 +15,9 @@ module SidekiqEcsScaler
     # @!attribute [r] max_count
     # @return [Integer]
     attr_reader :max_count
+    # @!attribute [r] step_count
+    # @return [Integer]
+    attr_reader :step_count
     # @!attribute [r] max_latency
     # @return [Integer]
     attr_reader :max_latency
@@ -27,6 +30,7 @@ module SidekiqEcsScaler
       @queue_name = "default"
       @min_count = 1
       @max_count = 1
+      @step_count = 1
       @max_latency = 3600
       @task_meta = TaskMetaV4.build_or_null
       @enabled = true
@@ -66,7 +70,7 @@ module SidekiqEcsScaler
     # @return [void]
     # @raise [ArgumentError]
     def min_count=(min_count)
-      raise ArgumentError unless min_count.positive?
+      assert_positive_number!(min_count)
 
       @min_count = min_count
       @max_count = min_count if min_count > max_count
@@ -76,10 +80,18 @@ module SidekiqEcsScaler
     # @return [void]
     # @raise [ArgumentError]
     def max_count=(max_count)
-      raise ArgumentError unless max_count.positive?
+      assert_positive_number!(max_count)
 
       @max_count = max_count
       @min_count = max_count if max_count < min_count
+    end
+
+    # @param step_count [Integer]
+    # @return [void]
+    def step_count=(step_count)
+      assert_positive_number!(step_count)
+
+      @step_count = step_count
     end
 
     # @param max_latency [Integer]
@@ -106,8 +118,8 @@ module SidekiqEcsScaler
     end
 
     # @return [Integer]
-    def latency_per_count
-      (max_latency / (1 + max_count - min_count)).tap do |value|
+    def latency_per_step_count
+      (max_latency / ((1 + max_count - min_count).to_f / step_count).ceil).tap do |value|
         value.positive? || (raise Error, "latency per count isn't positive!")
       end
     end
@@ -128,6 +140,15 @@ module SidekiqEcsScaler
       raise ArgumentError unless sidekiq_options.is_a?(Hash)
 
       ::SidekiqEcsScaler::Worker.sidekiq_options(sidekiq_options)
+    end
+
+    private
+
+    # @param number [Integer]]
+    # @return [void]
+    # @raise [ArgumentError]
+    def assert_positive_number!(number)
+      raise ArgumentError unless number.positive?
     end
   end
 end
