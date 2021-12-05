@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "lib/sidekiq-ecs-scaler/version"
+require_relative "lib/sidekiq_ecs_scaler/version"
 
 Gem::Specification.new do |spec|
   spec.name = "sidekiq-ecs-scaler"
