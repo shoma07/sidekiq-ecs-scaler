@@ -18,4 +18,5 @@ Metrics/BlockLength:
     - spec/**/*_spec.rb
 
 Naming/FileName:
-  Enabled: false
+  Exclude:
+    - lib/sidekiq-ecs-scaler.rb
