@@ -88,6 +88,7 @@ module SidekiqEcsScaler
 
     # @param step_count [Integer]
     # @return [void]
+    # @raise [ArgumentError]
     def step_count=(step_count)
       assert_positive_number!(step_count)
 
@@ -144,7 +145,7 @@ module SidekiqEcsScaler
 
     private
 
-    # @param number [Integer]]
+    # @param number [Integer]
     # @return [void]
     # @raise [ArgumentError]
     def assert_positive_number!(number)
