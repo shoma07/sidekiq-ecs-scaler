@@ -9,11 +9,14 @@ RSpec.describe SidekiqEcsScaler::Client do
       c.logger = Logger.new(io).tap { |logger| logger.formatter = Sidekiq::Logger::Formatters::JSON.new }
       c.min_count = 1
       c.max_count = 10
+      c.step_count = step_count
       c.max_latency = 3600
       c.ecs_client = ecs_client
       c.enabled = enabled
     end
   end
+
+  let(:step_count) { 1 }
 
   let(:enabled) { true }
 
@@ -59,13 +62,26 @@ RSpec.describe SidekiqEcsScaler::Client do
       it { is_expected.to be_nil }
     end
 
-    context "when queue latency is less than max latency" do
+    context "when queue latency is less than max latency and step_count is 1" do
       it { is_expected.to eq 6 }
 
       it do
         update
         expect(JSON.parse(io.tap(&:rewind).read).fetch("msg")).to(
           eq("SidekiqEcsScaler has updated the desired count of tasks from 1 to 6.")
+        )
+      end
+    end
+
+    context "when queue latency is less than max latency step_count is 3" do
+      let(:step_count) { 3 }
+
+      it { is_expected.to eq 7 }
+
+      it do
+        update
+        expect(JSON.parse(io.tap(&:rewind).read).fetch("msg")).to(
+          eq("SidekiqEcsScaler has updated the desired count of tasks from 1 to 7.")
         )
       end
     end
